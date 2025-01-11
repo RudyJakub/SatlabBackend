@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (s *Server) AdminLoginPage(c echo.Context) error {
+func (s *Server) AdminLoginView(c echo.Context) error {
 	if c.Request().Method == http.MethodGet {
 		return c.Render(http.StatusOK, "login.html", nil)
 	}
@@ -26,12 +26,12 @@ func (s *Server) AdminLoginPage(c echo.Context) error {
 	return c.Redirect(http.StatusSeeOther, "/admin")
 }
 
-func (s *Server) AdminLogoutPage(c echo.Context) error {
+func (s *Server) AdminLogoutView(c echo.Context) error {
 	s.DestroySession(c)
 	return c.Render(http.StatusOK, "logout.html", nil)
 }
 
-func (s *Server) AdminHomePage(c echo.Context) error {
+func (s *Server) AdminHomeView(c echo.Context) error {
 	userid, err := s.GetSession(c)
 	if err != nil || userid != "admin" {
 		return c.Redirect(http.StatusSeeOther, "/admin/login")
@@ -44,7 +44,7 @@ func (s *Server) AdminHomePage(c echo.Context) error {
 	return c.Render(http.StatusOK, "home.html", articles)
 }
 
-func (s *Server) AdminArticleEditPage(c echo.Context) error {
+func (s *Server) AdminArticleEditView(c echo.Context) error {
 	userid, err := s.GetSession(c)
 	if err != nil || userid != "admin" {
 		return c.Redirect(http.StatusSeeOther, "/admin/login")
@@ -57,3 +57,16 @@ func (s *Server) AdminArticleEditPage(c echo.Context) error {
 	}
 	return c.Render(http.StatusOK, "edit_article.html", article)
 }
+
+/*
+func (s *Server) UploadFileView(c echo.Context) error {
+	title := c.FormValue("title")
+	a_id := c.FormValue("article_id")
+	image, err := c.FormFile("image")
+	if err != nil {
+		return err
+	}
+	repo := articles.Repository(s.db)
+	repo.AddImageToArticle(a_id, title, path)
+}
+*/

@@ -9,27 +9,13 @@ import (
 	"github.com/google/uuid"
 )
 
-func TestArticleCreateOne(t *testing.T) {
-	db := database.NewTest()
-	repo := articles.Repository(db)
-	article := &articles.Article{
-		Title:   "tytul",
-		Content: "tu jest tresc",
-		Public:  true,
-	}
-	if err := repo.CreateOne(article); err != nil {
-		t.Fatal(err)
-	}
-	db.Close()
-}
-
-func TestArticleGetOneById(t *testing.T) {
+func TestAddImageToArticle(t *testing.T) {
 	db := database.NewTest()
 	a := &articles.Article{
 		Id:          uuid.NewString(),
-		Title:       "tytul",
-		Description: "opis",
-		Content:     "tu jest tresc",
+		Title:       "tytul2",
+		Description: "opis2",
+		Content:     "tu jest tresc 2",
 		Public:      true,
 	}
 	_, err := db.Exec(`
@@ -39,12 +25,9 @@ func TestArticleGetOneById(t *testing.T) {
 		t.Fatal(err)
 	}
 	repo := articles.Repository(db)
-	article, err := repo.GetOneById(a.Id)
+	err = repo.AddImageToArticle(a.Id, "image#1", "path_to_file")
 	if err != nil {
 		t.Fatal(err)
-	}
-	if article.Title != a.Title {
-		t.Fail()
 	}
 	db.Close()
 }

@@ -55,7 +55,8 @@ func NewTest() Service {
 }
 
 func initTables(db *sql.DB) error {
-	_, err := db.Exec(`
+	var err error
+	_, err = db.Exec(`
 	CREATE TABLE IF NOT EXISTS articles(
 		id text,
 		title text,
@@ -64,7 +65,21 @@ func initTables(db *sql.DB) error {
 		created_at integer,
 		updated_at integer,
 		public integer,
-		CONSTRAINT rid_pkey PRIMARY KEY (id)
+		CONSTRAINT articles_pkey PRIMARY KEY (id)
 	)`)
+	if err != nil {
+		return err
+	}
+	_, err = db.Exec(`
+	CREATE TABLE IF NOT EXISTS images(
+		id text,
+		title text,
+		uploaded_at integer,
+		image_location text,
+		article_id text not null,
+		CONSTRAINT images_pkey PRIMARY KEY (id),
+		FOREIGN KEY (article_id) REFERENCES articles(id)
+	)`)
+
 	return err
 }

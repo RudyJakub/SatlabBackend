@@ -33,16 +33,16 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.Use(middleware.Recover())
 
 	e.GET("/health", s.healthHandler)
-	e.GET("/api/articles", s.ArticleGetAllHandler)
+	e.GET("/api/articles", s.ArticleGetAllPublicHandler)
 	e.GET("/api/articles/:id", s.ArticleGetOneHandler)
 	e.POST("/api/articles/create", s.ArticleCreateHandler)
 	e.PUT("/api/articles/update", s.ArticleUpdateHandler)
 	e.DELETE("/api/articles/delete", s.ArticleDeleteHandler)
 
-	e.GET("/admin", s.AdminHomePage)
-	e.Any("/admin/login", s.AdminLoginPage)
-	e.Any("/admin/logout", s.AdminLogoutPage)
-	e.GET("/admin/edit-article", s.AdminArticleEditPage)
+	e.GET("/admin", s.AdminHomeView)
+	e.Any("/admin/login", s.AdminLoginView)
+	e.Any("/admin/logout", s.AdminLogoutView)
+	e.GET("/admin/edit-article", s.AdminArticleEditView)
 
 	return e
 }

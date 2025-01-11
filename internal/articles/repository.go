@@ -103,3 +103,10 @@ func (r *repo) GetAllPublic() ([]Article, error) {
 	}
 	return articles, nil
 }
+
+func (r *repo) AddImageToArticle(article_id string, title string, path string) error {
+	_, err := r.db.Query(`INSERT INTO images (id, title, uploaded_at, image_location, article_id)
+	VALUES ($1, $2, $3, $4, $5)`, uuid.NewString(), title, time.Now(), path, article_id)
+
+	return err
+}
