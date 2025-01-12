@@ -27,6 +27,10 @@ func (s *Server) healthHandler(c echo.Context) error {
 
 func (s *Server) RegisterRoutes() http.Handler {
 	e := echo.New()
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
 	e.Renderer = Renderer()
 	e.Static("/static", "web/static")
 	e.Use(middleware.Logger())
