@@ -6,13 +6,24 @@ import (
 	"satlab-api/internal/articles"
 
 	"github.com/labstack/echo/v4"
+	"golang.org/x/crypto/bcrypt"
 )
+
+func checkPasswordHash(password, hash string) bool {
+	println(password)
+	println(os.Getenv("ADMIN_PASSWORD_HASH"))
+	pwd, _ := bcrypt.GenerateFromPassword([]byte(password), 8)
+	println(string(pwd[:]))
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
 
 func (s *Server) AdminLoginView(c echo.Context) error {
 	if c.Request().Method == http.MethodGet {
 		return c.Render(http.StatusOK, "login.html", nil)
 	}
-	if c.FormValue("password") != os.Getenv("ADMIN_PASSWORD") {
+	authorized := checkPasswordHash(c.FormValue("password"), os.Getenv("ADMIN_PASSWORD_HASH"))
+	if !authorized {
 		return c.JSON(http.StatusUnauthorized, map[string]string{
 			"message": "unauthorized",
 		})
